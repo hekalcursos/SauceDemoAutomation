@@ -4,7 +4,7 @@ import { InventoryPage } from "./InventoryPage";
 import { CartPage } from "./CartPage";
 import { CheckOutPage } from "./CheckOutPage";
 import { CheckOutOverviewPage } from "./CheckOutOverviewPage";
-import { CheckOutCompletePage } from "./CheckoutCompletePage";
+import { CheckOutCompletePage } from "./CheckOutCompletePage";
 
 
 export class PageManager {
