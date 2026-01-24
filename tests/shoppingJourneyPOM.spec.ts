@@ -1,7 +1,7 @@
 import { test } from './test-options'; 
 import { expect } from '@playwright/test';
 import { PageManager } from '../pages/PageManager';
-import * as testData from '../data/testData.json';
+import * as testData from '../data/TestData.json';
 
 
 test('@Regression @Smoke Full Shopping Journey HappyPath', async ({ page, pm }) => {
