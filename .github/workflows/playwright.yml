@@ -1,45 +1,55 @@
-name: Playwright Tests  # The name you see in the "Actions" tab on GitHub
+name: Playwright Tests  # The name that appears in the "Actions" tab on GitHub
 
-on:
+on:  # THE TRIGGERS: When should this robot wake up?
   push:
-    branches: [ main, master ] # Trigger: Run automatically when you push to main or master
+    branches: [ main, master ] # 1. Run automatically when code is Pushed to these branches
   pull_request:
-    branches: [ main, master ] # Trigger: Run when someone opens a Pull Request
+    branches: [ main, master ] # 2. Run automatically when a Pull Request is opened against these branches
+  workflow_dispatch: # 3. Enable the "Run Workflow" button for Manual runs
+    inputs:
+      grep_tag: # Create a text box in the menu asking for a tag
+        description: 'Grep Tag (e.g., @Smoke or @Regression)' # The label the user sees
+        required: false # It is optional (if empty, run everything)
+        default: '' # Default to empty (run all tests)
 
 permissions:
-  contents: write # Keycard: Gives the robot permission to upload the website report
+  contents: write # KEYCARD: Gives the robot permission to upload the website report to the repository
 
 jobs:
-  test:
-    timeout-minutes: 60 # Safety: Kill the process if it freezes for 1 hour
-    runs-on: ubuntu-latest # Environment: Request a fresh Linux computer from GitHub
+  test: # Define the job name
+    timeout-minutes: 60 # SAFETY: Kill the process if it freezes for 1 hour
+    runs-on: ubuntu-latest # COMPUTER: Request a fresh, empty Linux server from GitHub
 
-    steps:
-    - uses: actions/checkout@v4 # Step 1: Download your code onto that Linux computer
-    - uses: actions/setup-node@v4 # Step 2: Install Node.js (engine needed for Playwright)
+    steps: # THE CHECKLIST: What to do on that computer
+    - uses: actions/checkout@v4 # Step 1: Download your code from the repository
+    
+    - uses: actions/setup-node@v4 # Step 2: Install Node.js (the engine needed for Playwright)
       with:
-        node-version: lts/*
+        node-version: lts/* # Use the latest "Long Term Support" version of Node
 
     - name: Install dependencies
-      run: npm ci # Step 3: specific clean install of your libraries (faster than npm install)
+      run: npm ci # Step 3: Clean install of your libraries (faster/safer than 'npm install')
 
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps # Step 4: Download Chrome/Firefox browsers
+      run: npx playwright install --with-deps # Step 4: Download Chrome/Firefox and Linux system tools
 
     - name: Run Playwright tests
-      run: npx playwright test # Step 5: The Main Event - Run the actual tests
+      # Step 5: RUN THE TESTS
+      # Logic: If 'grep_tag' has text (Manual run), use it. 
+      # If it is empty (Automatic Push/PR), run everything.
+      run: npx playwright test --grep "${{ inputs.grep_tag || '' }}"
 
     - uses: actions/upload-artifact@v4 # Step 6: Save the report folder as a Zip file
-      if: always() # Important: Run this even if tests FAIL (so we see the errors)
+      if: always() # CRITICAL: Run this even if tests FAIL (so we can see the error report)
       with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30 # Delete the zip file after 30 days to save space
+        name: playwright-report # Name of the zip file
+        path: playwright-report/ # Which folder to zip
+        retention-days: 30 # Delete the zip after 30 days
 
-    - name: Deploy Report to GitHub Pages # Step 7: Publish the report to the website link
-      if: always() # Important: Update the website even if tests fail
+    - name: Deploy Report to GitHub Pages # Step 7: Publish the live website
+      if: always() # CRITICAL: Update the website even if tests failed
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }} # The password the robot uses to log in
-        publish_dir: ./playwright-report # The folder to put on the internet
-        keep_files: true
+        publish_dir: ./playwright-report # The folder to upload to the internet
+        keep_files: true # Keep history if needed
