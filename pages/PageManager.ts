@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { LoginePage } from "./LoginPage";
+import { LoginPage } from "./LoginPage";
 import { InventoryPage } from "./InventoryPage";
 import { CartPage } from "./CartPage";
 import { CheckOutPage } from "./CheckOutPage";
@@ -11,7 +11,7 @@ export class PageManager {
 
 
     private readonly page: Page;
-    private readonly loginPage: LoginePage;
+    private readonly loginPage: LoginPage;
     private readonly inventoryPage: InventoryPage;
     private readonly cartPage: CartPage;
     private readonly checkOutPage: CheckOutPage;
@@ -22,7 +22,7 @@ export class PageManager {
     constructor(page: Page) {
 
         this.page = page;
-        this.loginPage = new LoginePage(this.page);
+        this.loginPage = new LoginPage(this.page);
         this.inventoryPage = new InventoryPage(this.page);
         this.cartPage = new CartPage(this.page);
         this.checkOutPage = new CheckOutPage(this.page);

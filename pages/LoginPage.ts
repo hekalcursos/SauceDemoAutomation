@@ -2,7 +2,7 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
 // 2. Add 'export' so other files can import this class
-export class LoginePage {
+export class LoginPage {
 
     // 3. THE INVENTORY LIST (Required in TypeScript)
     // We must declare these variables and their types here first.
