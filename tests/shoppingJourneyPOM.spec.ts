@@ -1,15 +1,16 @@
-import { test } from './test-options'; 
+import { test } from './test-options';
 import { expect } from '@playwright/test';
 import { PageManager } from '../pages/PageManager';
 import * as testData from '../Data/TestData.json';
 
 
-test('@Regression @Smoke Full Shopping Journey HappyPath', async ({ page, pm }) => {
-
+test('@Autologin @Regression @Smoke Full Shopping Journey HappyPath', async ({ page, pm }) => {
 
     //1- Login
-    await pm.onLoginPage().navigate();
-    await pm.onLoginPage().login(testData.username, testData.password);
+    // will be called by Setup Dependecies in the conf file and will inject the Token in the Storagestate.
+
+    // We will call the navigate() method from InventoryPage.ts 
+    await pm.onInventoryPage().navigate();
 
     //2- Inventory: Add Item
     await pm.onInventoryPage().verifyInventoryPage();
@@ -31,13 +32,14 @@ test('@Regression @Smoke Full Shopping Journey HappyPath', async ({ page, pm }) 
 
     //6- Complete - Verify Success
     await pm.onCheckOutCompletePage().verifySuccessMessage();
-
 })
 
-test('logging with locked out user', async ({page, pm})=>{
+test.describe('Login Negative Scenarios', () => {
+
+test.use({ storageState: { cookies: [], origins: [] } });
+test('@Clearcookies logging with locked out user', async ({ page, pm }) => {
 
 
-    //1- Login
     await pm.onLoginPage().navigate();
     await pm.onLoginPage().login(testData.lockedUser, testData.password);
 
@@ -46,13 +48,13 @@ test('logging with locked out user', async ({page, pm})=>{
 
 })
 
+});
 
-test('@Regression Add and remove item from cart', async ({ page , pm}) => {
+test('@Autologin @Regression Add and remove item from cart', async ({ page, pm }) => {
 
-
-    //1- Login
-    await pm.onLoginPage().navigate();
-    await pm.onLoginPage().login(testData.username, testData.password);
+    //1- Login done by Setup configuration
+    // We will call the navigate() method from InventoryPage.ts 
+    await pm.onInventoryPage().navigate();
 
     //2- Inventory: Add Item
     await pm.onInventoryPage().verifyInventoryPage();

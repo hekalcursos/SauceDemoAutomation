@@ -47,9 +47,26 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+
+    // 1️- SETUP PROJECT ==> Runs first. Creates the auth file.
+
+    {
+      name: 'setup',
+      testMatch: 'auth.setup.ts',
+    },
+
+
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], 
+      
+      // Inject the file we just created
+        storageState: 'playwright/.auth/user.json',
+
+      },
+
+      // Wait for 'setup' to finish successfully
+      dependencies: ['setup'],
     },
 
     /*{

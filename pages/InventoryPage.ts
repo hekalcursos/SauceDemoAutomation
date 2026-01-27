@@ -19,6 +19,12 @@ export class InventoryPage {
         //this.addToCart = page.locator('.inventory_item').filter({ hasText: this.desiredItemToAdd }).getByRole('button', { name: 'Add to cart' })
     }
 
+    
+    async navigate() {
+        await this.page.goto('inventory.html');
+    }
+
+
     async verifyInventoryPage() {
         await expect(this.page).toHaveTitle('Swag Labs');
         await expect(this.productImageLast).toBeVisible();
