@@ -1,6 +1,5 @@
 import { test as setup } from './test-options'; 
 import { expect } from '@playwright/test';
-import { PageManager } from '../pages/PageManager';
 
 export const authFile = 'playwright/.auth/user.json';
 
